@@ -1,1 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lunar Coworker Guide</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        function App() {
+            const [birthDate, setBirthDate] = React.useState('');
+            const [coworkerName, setCoworkerName] = React.useState('');
+            const [result, setResult] = React.useState(null);
 
+            const handleClick = () => {
+                if (!birthDate) {
+                    setResult("Please select your coworker's birth date");
+                    return;
+                }
+
+                const date = new Date(birthDate);
+                const dayOfMonth = date.getDate();
+                
+                let moonPhase;
+                if (dayOfMonth <= 7) moonPhase = "New Moon";
+                else if (dayOfMonth <= 14) moonPhase = "Waxing Moon";
+                else if (dayOfMonth <= 21) moonPhase = "Full Moon";
+                else moonPhase = "Waning Moon";
+
+                const phaseInfo = {
+                    "New Moon": {
+                        mood: "quiet and thoughtful",
+                        energy: "internally focused",
+                        approach: "Give them space for deep work",
+                        good: [
+                            "Send written communications",
+                            "Schedule planning sessions",
+                            "Let them work independently",
+                            "Share complex problems"
+                        ],
+                        avoid: [
+                            "Surprise meetings",
+                            "Pushing for immediate responses",
+                            "Too much social interaction",
+                            "Rushing decisions"
+                        ]
+                    },
+                    "Waxing Moon": {
+                        mood: "energetic and optimistic",
+                        energy: "ready to take on new challenges",
+                        approach: "Engage them in new projects and ideas",
+                        good: [
+                            "Propose new initiatives",
+                            "Schedule brainstorming sessions",
+                            "Start new collaborations",
+                            "Share exciting opportunities"
+                        ],
+                        avoid: [
+                            "Focusing on routine tasks",
+                            "Getting stuck in details",
+                            "Dwelling on past issues",
+                            "Limiting their creativity"
+                        ]
+                    },
+                    "Full Moon": {
+                        mood: "expressive and social",
+                        energy: "collaborative and outgoing",
+                        approach: "Perfect time for team activities",
+                        good: [
+                            "Schedule team meetings",
+                            "Plan presentations",
+                            "Organize group activities",
+                            "Have important discussions"
+                        ],
+                        avoid: [
+                            "Assigning solitary work",
+                            "Expecting detailed analysis",
+                            "Technical deep-dives",
+                            "Complex decision-making"
+                        ]
+                    },
+                    "Waning Moon": {
+                        mood: "analytical and reflective",
+                        energy: "focused on completing and reviewing work",
+                        approach: "Best for finishing projects and evaluation",
+                        good: [
+                            "Ask for feedback on projects",
+                            "Review completed work",
+                            "Wrap up ongoing tasks",
+                            "Discuss improvements"
+                        ],
+                        avoid: [
+                            "Starting major new projects",
+                            "Pushing for enthusiasm",
+                            "Scheduling high-energy events",
+                            "Making big changes"
+                        ]
+                    }
+                };
+
+                setResult({
+                    phase: moonPhase,
+                    details: phaseInfo[moonPhase],
+                    date: new Date().toLocaleDateString()
+                });
+            };
+
+            return (
+                <div className="p-6 max-w-2xl mx-auto bg-white">
+                    <h1 className="text-2xl font-bold text-gray-800 mb-6">Lunar Coworker Guide</h1>
+                    
+                    <div className="mb-6 space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Coworker's Name (Optional)
+                            </label>
+                            <input
+                                type="text"
+                                value={coworkerName}
+                                onChange={(e) => setCoworkerName(e.target.value)}
+                                placeholder="Enter their name"
+                                className="w-full p-2 border rounded-md"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Coworker's Birthday
+                            </label>
+                            <input
+                                type="date"
+                                value={birthDate}
+                                onChange={(e) => setBirthDate(e.target.value)}
+                                className="w-full p-2 border rounded-md"
+                            />
+                        </div>
+
+                        <button 
+                            onClick={handleClick}
+                            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+                        >
+                            Get Today's Insights
+                        </button>
+                    </div>
+
+                    {result && typeof result === 'string' ? (
+                        <div className="p-3 bg-red-50 text-red-600 rounded-md">
+                            {result}
+                        </div>
+                    ) : result && (
+                        <div className="space-y-6">
+                            <div className="text-sm text-gray-600">
+                                Updated for: {result.date}
+                            </div>
+
+                            <div className="p-4 bg-blue-50 rounded-md">
+                                <h2 className="text-xl font-semibold text-blue-800 mb-4">
+                                    {coworkerName ? `${coworkerName}'s` : "Their"} Lunar Energy: {result.phase}
+                                </h2>
+                                
+                                <div className="space-y-4">
+                                    <div>
+                                        <p className="text-gray-700">
+                                            Today they're likely feeling <strong>{result.details.mood}</strong> and their energy is <strong>{result.details.energy}</strong>.
+                                        </p>
+                                    </div>
+                                    
+                                    <div>
+                                        <p className="text-gray-700">
+                                            <strong>Best approach:</strong> {result.details.approach}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="p-4 bg-green-50 rounded-md">
+                                <h3 className="font-medium text-gray-900 mb-3">Recommended Interactions</h3>
+                                <ul className="space-y-2">
+                                    {result.details.good.map((tip, index) => (
+                                        <li key={index} className="flex items-start gap-2">
+                                            <span className="text-green-500">✓</span>
+                                            <span className="text-gray-700">{tip}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            <div className="p-4 bg-red-50 rounded-md">
+                                <h3 className="font-medium text-gray-900 mb-3">What to Avoid</h3>
+                                <ul className="space-y-2">
+                                    {result.details.avoid.map((tip, index) => (
+                                        <li key={index} className="flex items-start gap-2">
+                                            <span className="text-red-500">•</span>
+                                            <span className="text-gray-700">{tip}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
