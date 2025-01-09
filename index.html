@@ -14,14 +14,16 @@
     <div id="root"></div>
     <script type="text/babel">
         function App() {
-            const [birthDate, setBirthDate] = React.useState('');
+            const [selectedMonth, setSelectedMonth] = React.useState('');
+            const [selectedDay, setSelectedDay] = React.useState('');
             const [coworkerName, setCoworkerName] = React.useState('');
             const [result, setResult] = React.useState(null);
             const [showForm, setShowForm] = React.useState(true);
 
-            const calculateMoonPhase = (date) => {
+            const calculateMoonPhase = (month, day) => {
+                const year = new Date().getFullYear();
+                const targetDate = new Date(year, month - 1, day);
                 const knownNewMoon = new Date('2024-01-11');
-                const targetDate = new Date(date);
                 const daysSinceNewMoon = Math.floor((targetDate - knownNewMoon) / (1000 * 60 * 60 * 24));
                 const currentPhase = daysSinceNewMoon % 29.53059;
                 
@@ -36,13 +38,14 @@
             };
 
             const handleClick = () => {
-                if (!birthDate) {
-                    setResult("Please select your coworker's birth date");
+                if (!selectedMonth || !selectedDay) {
+                    setResult("Please select your coworker's birth month and day");
                     return;
                 }
 
-                const todayPhase = calculateMoonPhase(new Date());
-                const birthPhase = calculateMoonPhase(birthDate);
+                const todayDate = new Date();
+                const todayPhase = calculateMoonPhase(todayDate.getMonth() + 1, todayDate.getDate());
+                const birthPhase = calculateMoonPhase(parseInt(selectedMonth), parseInt(selectedDay));
                 
                 const phaseInfo = {
                     "New Moon": {
@@ -183,7 +186,6 @@
                     }
                 };
 
-                const todayDate = new Date();
                 setResult({
                     phase: todayPhase,
                     details: phaseInfo[todayPhase],
@@ -195,7 +197,8 @@
 
             const handleReset = () => {
                 setResult(null);
-                setBirthDate('');
+                setSelectedMonth('');
+                setSelectedDay('');
                 setCoworkerName('');
                 setShowForm(true);
             };
@@ -225,38 +228,30 @@
                                 </label>
                                 <div className="flex gap-2">
                                     <select 
-                                        onChange={(e) => {
-                                            const month = e.target.value;
-                                            const year = new Date().getFullYear();
-                                            setBirthDate(`${year}-${month}-${birthDate.split('-')[2] || '01'}`);
-                                        }}
+                                        value={selectedMonth}
+                                        onChange={(e) => setSelectedMonth(e.target.value)}
                                         className="w-1/2 p-2 border rounded-md"
-                                        defaultValue=""
                                     >
-                                        <option value="" disabled>Month</option>
-                                        <option value="01">January</option>
-                                        <option value="02">February</option>
-                                        <option value="03">March</option>
-                                        <option value="04">April</option>
-                                        <option value="05">May</option>
-                                        <option value="06">June</option>
-                                        <option value="07">July</option>
-                                        <option value="08">August</option>
-                                        <option value="09">September</option>
+                                        <option value="">Month</option>
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
                                         <option value="10">October</option>
                                         <option value="11">November</option>
                                         <option value="12">December</option>
                                     </select>
                                     <select
-                                        onChange={(e) => {
-                                            const day = e.target.value.padStart(2, '0');
-                                            const [year, month] = birthDate.split('-');
-                                            setBirthDate(`${year}-${month || '01'}-${day}`);
-                                        }}
+                                        value={selectedDay}
+                                        onChange={(e) => setSelectedDay(e.target.value)}
                                         className="w-1/2 p-2 border rounded-md"
-                                        defaultValue=""
                                     >
-                                        <option value="" disabled>Day</option>
+                                        <option value="">Day</option>
                                         {[...Array(31)].map((_, i) => (
                                             <option key={i + 1} value={i + 1}>
                                                 {i + 1}
