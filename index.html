@@ -287,6 +287,25 @@
                                     ))}
                                 </ul>
                             </div>
+                            <button 
+                                onClick={() => {
+                                    setResult(null);
+                                    setBirthDate('');
+                                    setCoworkerName('');
+                                }}
+                                style={{
+                                    width: '100%',
+                                    padding: '16px',
+                                    marginTop: '32px',
+                                    backgroundColor: '#2563eb',
+                                    color: 'white',
+                                    borderRadius: '8px',
+                                    fontSize: '18px',
+                                    fontWeight: 'bold'
+                                }}
+                            >
+                                Start New Search
+                            </button>
 
                            <div className="mt-8 p-4 bg-white shadow-lg rounded-md">
                                 <button 
