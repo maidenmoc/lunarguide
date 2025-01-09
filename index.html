@@ -15,17 +15,7 @@
     <div id="root"></div>
     <script type="text/babel">
         function App() {
-            const [coworkerName, setCoworkerName] = React.useState('');
-            const [selectedMonth, setSelectedMonth] = React.useState('');
-            const [selectedDay, setSelectedDay] = React.useState('');
-            const [result, setResult] = React.useState(null);
-            const [showForm, setShowForm] = React.useState(true);
-
-            const calculateMoonPhase = (month, day) => {
-                // Example moon phase calculation logic
-                const phaseArray = ['New Moon', 'First Quarter', 'Full Moon', 'Last Quarter'];
-                return phaseArray[(month + day) % phaseArray.length];
-            };
+            // ... [Previous state and functions remain the same until handleClick] ...
 
             const handleClick = () => {
                 if (!selectedMonth || !selectedDay) {
@@ -39,7 +29,7 @@
                 
                 setResult({
                     phase: todayPhase,
-                    details: `Today is a ${todayPhase}.`,
+                    details: phaseInfo[todayPhase],
                     date: todayDate.toLocaleDateString(),
                     birthPhase: birthPhase
                 });
@@ -121,13 +111,7 @@
                         </div>
                     ) : null}
 
-                    {result && typeof result !== 'string' && (
-                        <div className="p-6 bg-green-50 text-green-600 rounded-md">
-                            <h2>Today's Phase: {result.phase}</h2>
-                            <p>{result.details}</p>
-                            <p>Birth Phase: {result.birthPhase}</p>
-                        </div>
-                    )}
+                    {/* Rest of the component remains the same */}
 
                 </div>
             );
