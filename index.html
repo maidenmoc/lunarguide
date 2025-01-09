@@ -18,96 +18,177 @@
             const [coworkerName, setCoworkerName] = React.useState('');
             const [result, setResult] = React.useState(null);
 
+            const calculateMoonPhase = (date) => {
+                // More accurate moon phase calculation
+                const knownNewMoon = new Date('2024-01-11'); // Recent new moon
+                const targetDate = new Date(date);
+                const daysSinceNewMoon = Math.floor((targetDate - knownNewMoon) / (1000 * 60 * 60 * 24));
+                const currentPhase = daysSinceNewMoon % 29.53059; // Synodic month (lunar cycle)
+                
+                if (currentPhase < 3.69) return "New Moon";
+                if (currentPhase < 7.38) return "Waxing Crescent";
+                if (currentPhase < 11.07) return "First Quarter";
+                if (currentPhase < 14.76) return "Waxing Gibbous";
+                if (currentPhase < 18.45) return "Full Moon";
+                if (currentPhase < 22.14) return "Waning Gibbous";
+                if (currentPhase < 25.83) return "Last Quarter";
+                return "Waning Crescent";
+            };
+
             const handleClick = () => {
                 if (!birthDate) {
                     setResult("Please select your coworker's birth date");
                     return;
                 }
 
-                const date = new Date(birthDate);
-                const dayOfMonth = date.getDate();
+                const todayPhase = calculateMoonPhase(new Date());
+                const birthPhase = calculateMoonPhase(birthDate);
                 
-                let moonPhase;
-                if (dayOfMonth <= 7) moonPhase = "New Moon";
-                else if (dayOfMonth <= 14) moonPhase = "Waxing Moon";
-                else if (dayOfMonth <= 21) moonPhase = "Full Moon";
-                else moonPhase = "Waning Moon";
-
                 const phaseInfo = {
                     "New Moon": {
-                        mood: "quiet and thoughtful",
-                        energy: "internally focused",
-                        approach: "Give them space for deep work",
+                        mood: "introspective and thoughtful",
+                        energy: "internally focused and planning-oriented",
+                        approach: "Give them space for strategic thinking and planning",
                         good: [
-                            "Send written communications",
-                            "Schedule planning sessions",
-                            "Let them work independently",
-                            "Share complex problems"
+                            "Share written communications rather than interrupting",
+                            "Schedule quiet planning sessions",
+                            "Ask for their insights on complex problems",
+                            "Allow time for independent work"
                         ],
                         avoid: [
-                            "Surprise meetings",
-                            "Pushing for immediate responses",
-                            "Too much social interaction",
-                            "Rushing decisions"
+                            "Surprise meetings or impromptu discussions",
+                            "Pushing for immediate decisions",
+                            "Overwhelming with social interaction",
+                            "Expecting quick, spontaneous responses"
                         ]
                     },
-                    "Waxing Moon": {
-                        mood: "energetic and optimistic",
-                        energy: "ready to take on new challenges",
-                        approach: "Engage them in new projects and ideas",
+                    "Waxing Crescent": {
+                        mood: "energetic and enthusiastic",
+                        energy: "building momentum and ready for action",
+                        approach: "Engage them in new projects and fresh ideas",
                         good: [
-                            "Propose new initiatives",
-                            "Schedule brainstorming sessions",
-                            "Start new collaborations",
-                            "Share exciting opportunities"
+                            "Present new opportunities",
+                            "Start exciting projects",
+                            "Schedule creative brainstorming",
+                            "Discuss growth and development"
                         ],
                         avoid: [
-                            "Focusing on routine tasks",
-                            "Getting stuck in details",
-                            "Dwelling on past issues",
-                            "Limiting their creativity"
+                            "Focusing on past issues",
+                            "Getting bogged down in details",
+                            "Limiting their creative expression",
+                            "Sticking to rigid routines"
+                        ]
+                    },
+                    "First Quarter": {
+                        mood: "determined and action-oriented",
+                        energy: "ready to overcome challenges",
+                        approach: "Support their drive to make progress",
+                        good: [
+                            "Help remove obstacles",
+                            "Support decision-making",
+                            "Provide resources they need",
+                            "Join their momentum"
+                        ],
+                        avoid: [
+                            "Creating unnecessary barriers",
+                            "Dwelling on uncertainties",
+                            "Slowing their progress",
+                            "Overcomplicating simple matters"
+                        ]
+                    },
+                    "Waxing Gibbous": {
+                        mood: "focused and detail-oriented",
+                        energy: "refining and improving",
+                        approach: "Help them perfect and enhance their work",
+                        good: [
+                            "Review and refine projects",
+                            "Offer constructive feedback",
+                            "Help with improvements",
+                            "Support their attention to detail"
+                        ],
+                        avoid: [
+                            "Rushing through important details",
+                            "Dismissing their concerns",
+                            "Pushing for quick completion",
+                            "Interrupting focused work"
                         ]
                     },
                     "Full Moon": {
-                        mood: "expressive and social",
-                        energy: "collaborative and outgoing",
-                        approach: "Perfect time for team activities",
+                        mood: "expressive and emotionally aware",
+                        energy: "highly social and collaborative",
+                        approach: "Engage in team activities and open discussion",
                         good: [
                             "Schedule team meetings",
                             "Plan presentations",
-                            "Organize group activities",
-                            "Have important discussions"
+                            "Hold important discussions",
+                            "Celebrate achievements"
                         ],
                         avoid: [
-                            "Assigning solitary work",
-                            "Expecting detailed analysis",
-                            "Technical deep-dives",
-                            "Complex decision-making"
+                            "Isolating them from the team",
+                            "Suppressing creative expression",
+                            "Expecting solitary focus",
+                            "Ignoring emotional aspects"
                         ]
                     },
-                    "Waning Moon": {
-                        mood: "analytical and reflective",
-                        energy: "focused on completing and reviewing work",
-                        approach: "Best for finishing projects and evaluation",
+                    "Waning Gibbous": {
+                        mood: "analytical and communicative",
+                        energy: "sharing knowledge and experience",
+                        approach: "Seek their insights and feedback",
                         good: [
-                            "Ask for feedback on projects",
-                            "Review completed work",
-                            "Wrap up ongoing tasks",
-                            "Discuss improvements"
+                            "Ask for their analysis",
+                            "Learn from their experience",
+                            "Share knowledge together",
+                            "Review completed work"
                         ],
                         avoid: [
-                            "Starting major new projects",
-                            "Pushing for enthusiasm",
-                            "Scheduling high-energy events",
-                            "Making big changes"
+                            "Dismissing their wisdom",
+                            "Rushing through evaluation",
+                            "Skipping important reviews",
+                            "Ignoring their advice"
+                        ]
+                    },
+                    "Last Quarter": {
+                        mood: "reflective and releasing",
+                        energy: "letting go and reassessing",
+                        approach: "Help them complete and conclude matters",
+                        good: [
+                            "Finish ongoing projects",
+                            "Clear up old issues",
+                            "Release what isn't working",
+                            "Plan next steps"
+                        ],
+                        avoid: [
+                            "Starting major new initiatives",
+                            "Adding more responsibilities",
+                            "Creating new pressure",
+                            "Forcing new commitments"
+                        ]
+                    },
+                    "Waning Crescent": {
+                        mood: "quiet and contemplative",
+                        energy: "preparing for new beginnings",
+                        approach: "Respect their need for space and reflection",
+                        good: [
+                            "Allow time for rest",
+                            "Support quiet preparation",
+                            "Help tie up loose ends",
+                            "Keep interactions gentle"
+                        ],
+                        avoid: [
+                            "Pushing for high energy",
+                            "Making big demands",
+                            "Scheduling intense meetings",
+                            "Expecting immediate action"
                         ]
                     }
                 };
 
+                const todayDate = new Date();
                 setResult({
-                    phase: moonPhase,
-                    details: phaseInfo[moonPhase],
-                    date: new Date().toLocaleDateString()
+                    phase: todayPhase,
+                    details: phaseInfo[todayPhase],
+                    date: todayDate.toLocaleDateString(),
+                    birthPhase: birthPhase
                 });
             };
 
@@ -175,6 +256,10 @@
                                         <p className="text-gray-700">
                                             <strong>Best approach:</strong> {result.details.approach}
                                         </p>
+                                    </div>
+                                    
+                                    <div className="text-sm text-gray-600">
+                                        Birth Moon Phase: {result.birthPhase}
                                     </div>
                                 </div>
                             </div>
