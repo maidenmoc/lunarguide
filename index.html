@@ -17,13 +17,13 @@
             const [birthDate, setBirthDate] = React.useState('');
             const [coworkerName, setCoworkerName] = React.useState('');
             const [result, setResult] = React.useState(null);
+            const [showForm, setShowForm] = React.useState(true);
 
             const calculateMoonPhase = (date) => {
-                // More accurate moon phase calculation
-                const knownNewMoon = new Date('2024-01-11'); // Recent new moon
+                const knownNewMoon = new Date('2024-01-11');
                 const targetDate = new Date(date);
                 const daysSinceNewMoon = Math.floor((targetDate - knownNewMoon) / (1000 * 60 * 60 * 24));
-                const currentPhase = daysSinceNewMoon % 29.53059; // Synodic month (lunar cycle)
+                const currentPhase = daysSinceNewMoon % 29.53059;
                 
                 if (currentPhase < 3.69) return "New Moon";
                 if (currentPhase < 7.38) return "Waxing Crescent";
@@ -190,45 +190,55 @@
                     date: todayDate.toLocaleDateString(),
                     birthPhase: birthPhase
                 });
+                setShowForm(false);
+            };
+
+            const handleReset = () => {
+                setResult(null);
+                setBirthDate('');
+                setCoworkerName('');
+                setShowForm(true);
             };
 
             return (
                 <div className="p-6 max-w-2xl mx-auto bg-white">
                     <h1 className="text-2xl font-bold text-gray-800 mb-6">Lunar Coworker Guide</h1>
                     
-                    <div className="mb-6 space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Coworker's Name (Optional)
-                            </label>
-                            <input
-                                type="text"
-                                value={coworkerName}
-                                onChange={(e) => setCoworkerName(e.target.value)}
-                                placeholder="Enter their name"
-                                className="w-full p-2 border rounded-md"
-                            />
-                        </div>
+                    {showForm ? (
+                        <div className="mb-6 space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Coworker's Name (Optional)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={coworkerName}
+                                    onChange={(e) => setCoworkerName(e.target.value)}
+                                    placeholder="Enter their name"
+                                    className="w-full p-2 border rounded-md"
+                                />
+                            </div>
 
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Coworker's Birthday
-                            </label>
-                            <input
-                                type="date"
-                                value={birthDate}
-                                onChange={(e) => setBirthDate(e.target.value)}
-                                className="w-full p-2 border rounded-md"
-                            />
-                        </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Coworker's Birthday
+                                </label>
+                                <input
+                                    type="date"
+                                    value={birthDate}
+                                    onChange={(e) => setBirthDate(e.target.value)}
+                                    className="w-full p-2 border rounded-md"
+                                />
+                            </div>
 
-                        <button 
-                            onClick={handleClick}
-                            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
-                        >
-                            Get Today's Insights
-                        </button>
-                    </div>
+                            <button 
+                                onClick={handleClick}
+                                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+                            >
+                                Get Today's Insights
+                            </button>
+                        </div>
+                    ) : null}
 
                     {result && typeof result === 'string' ? (
                         <div className="p-3 bg-red-50 text-red-600 rounded-md">
@@ -287,36 +297,13 @@
                                     ))}
                                 </ul>
                             </div>
-                            <button 
-                                onClick={() => {
-                                    setResult(null);
-                                    setBirthDate('');
-                                    setCoworkerName('');
-                                }}
-                                style={{
-                                    width: '100%',
-                                    padding: '16px',
-                                    marginTop: '32px',
-                                    backgroundColor: '#2563eb',
-                                    color: 'white',
-                                    borderRadius: '8px',
-                                    fontSize: '18px',
-                                    fontWeight: 'bold'
-                                }}
-                            >
-                                Start New Search
-                            </button>
 
-                           <div className="mt-8 p-4 bg-white shadow-lg rounded-md">
+                            <div className="p-4">
                                 <button 
-                                    onClick={() => {
-                                        setResult(null);
-                                        setBirthDate('');
-                                        setCoworkerName('');
-                                    }}
-                                    className="w-full bg-blue-600 text-white py-4 px-6 rounded-md hover:bg-blue-700 text-lg font-bold"
+                                    onClick={handleReset}
+                                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 text-lg font-medium"
                                 >
-                                    ↺ Start New Search
+                                    ↺ Check Another Coworker
                                 </button>
                             </div>
                         </div>
